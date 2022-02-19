@@ -17,6 +17,9 @@ public class Worker04 {
 
         System.out.println("C2接收消息处理时间较长");
 
+        //设置不公平分发
+        channel.basicQos(1);
+
         //采用手动应答
         channel.basicConsume(QUEUE_NAME, false,
                 (consumerTag, message) -> {

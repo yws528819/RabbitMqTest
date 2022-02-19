@@ -17,6 +17,10 @@ public class Worker03 {
 
         System.out.println("C1接收消息处理时间较短");
 
+        //先遵循轮询，然后再看预处理的消息数（预取值：信道预消费取出消息的条数）
+        //设置不公平分发
+        channel.basicQos(1);
+
         //采用手动应答
         channel.basicConsume(QUEUE_NAME, false,
                 (consumerTag, message) -> {
