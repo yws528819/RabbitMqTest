@@ -40,7 +40,9 @@ public class Consumer01 {
         arguments.put("x-dead-letter-exchange", DEAD_EXCHANGE);
         //设置死信Routingkey
         arguments.put("x-dead-letter-routing-key", "lisi");
-        channel.queueDeclare(NORMAL_QUEUE, false, false, false, null);
+        //设置正常队列的长度的限制
+        //arguments.put("x-max-length", 6);
+        channel.queueDeclare(NORMAL_QUEUE, false, false, false, arguments);
 
         //声明死信队列
         channel.queueDeclare(DEAD_QUEUE, false, false, false, null);
@@ -54,8 +56,15 @@ public class Consumer01 {
         System.out.println("等待接收消息...");
 
         //消费消息
-        channel.basicConsume(NORMAL_QUEUE, true, (consumerTag, message) -> {
-            System.out.println("Consumer01接收的消息是：" + new String(message.getBody(), StandardCharsets.UTF_8));
+        channel.basicConsume(NORMAL_QUEUE, false, (consumerTag, message) -> {
+            String msg = new String(message.getBody(), StandardCharsets.UTF_8);
+            if ("5".equals(msg)) {
+                System.out.println("Consumer01接收的消息是：" + msg + "，此消息是被C1拒绝的");
+                channel.basicReject(message.getEnvelope().getDeliveryTag(), false);
+            }else {
+                System.out.println("Consumer01接收的消息是：" + msg);
+                channel.basicAck(message.getEnvelope().getDeliveryTag(), false);
+            }
         }, consumerTag -> {});
 
 

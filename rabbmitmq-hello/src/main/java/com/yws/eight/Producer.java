@@ -17,12 +17,12 @@ public class Producer {
         Channel channel = MqUtils.getChannel();
 
         //死信消息 设置TTL时间 10000ms = 1s
-        AMQP.BasicProperties props = new AMQP.BasicProperties()
-                .builder().expiration("10000").build();
+        // AMQP.BasicProperties props = new AMQP.BasicProperties()
+        //         .builder().expiration("10000").build();
 
         for (int i = 1; i < 11; i++) {
             String message = i + "";
-            channel.basicPublish(NORMAL_EXCHANGE, "zhangsan", props, message.getBytes());
+            channel.basicPublish(NORMAL_EXCHANGE, "zhangsan", null, message.getBytes());
         }
 
 
