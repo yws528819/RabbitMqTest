@@ -22,6 +22,8 @@ public class TtlQueueConfig {
     //普通队列名称
     private static final String QUEUE_A = "QA";
     private static final String QUEUE_B = "QB";
+    private static final String QUEUE_C = "QC";
+
     //死信队列名称
     private static final String DEAD_LETTER_QUEUE = "QD";
 
@@ -81,6 +83,21 @@ public class TtlQueueConfig {
     }
 
 
-
+    //增加一个TTL时间由生产者发送定义的场景
+    //声明队列
+    @Bean
+    public Queue queueC() {
+        return QueueBuilder.durable(QUEUE_C)
+                //设置死信交换机
+                .deadLetterExchange(Y_DEAD_LETTER_EXCHANGE)
+                //设置死信RoutingKey
+                .deadLetterRoutingKey("YD")
+                .build();
+    }
+    //绑定
+    @Bean
+    public Binding queueCBindingX() {
+        return BindingBuilder.bind(queueC()).to(xExchange()).with("XC");
+    }
 
 }
