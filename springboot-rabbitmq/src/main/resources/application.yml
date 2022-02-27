@@ -4,3 +4,5 @@ spring:
     port: 5672
     username: admin
     password: 123
+    publisher-confirm-type: correlated #发布消息成功到交换机后出发回调方法
+    publisher-returns: true
